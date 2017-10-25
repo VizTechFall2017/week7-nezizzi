@@ -16,7 +16,7 @@ var scaleY = d3.scaleLinear().range([400, 0]);
 
 
 //import the data from the .csv file
-d3.csv('./countryData.csv', function(dataIn){
+d3.csv('./countryData_topten.csv', function(dataIn){
 
     nestedData = d3.nest()
         .key(function(d){return d.year})
@@ -29,6 +29,7 @@ d3.csv('./countryData.csv', function(dataIn){
 
     // Add the x Axis
     svg.append("g")
+        .attr('class', 'xaxis')
         .attr('transform','translate(0,400)')  //move the x axis from the top of the y axis to the bottom
         .call(d3.axisBottom(scaleX));
 
@@ -53,12 +54,12 @@ d3.csv('./countryData.csv', function(dataIn){
         */
 
     //bind the data to the d3 selection, but don't draw it yet
-    svg.selectAll('rect')
-        .data(loadData)
+    /*svg.selectAll('rect')
+        .data(loadData, function(d){return d.countryCode})
         .enter()
         .append('rect')
         .attr('class','bars')
-        .attr('fill', "slategray");
+        .attr('fill', "slategray");*/ ///dont need this because the number of bars is changing
 
     //call the drawPoints function below, and hand it the data2016 variable with the 2016 object array in it
     drawPoints(loadData);
@@ -69,13 +70,48 @@ d3.csv('./countryData.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
+    scaleX.domain(pointData.map(function(d){return d.countryCode;}));
     scaleY.domain([0, d3.max(pointData.map(function(d){return +d.totalPop}))]);
+
+    svg.selectAll(".xaxis")
+        .attr('transform','translate(0,400)')  //move the x axis from the top of the y axis to the bottom
+        .call(d3.axisBottom(scaleX));
 
     svg.selectAll('.yaxis')
         .call(d3.axisLeft(scaleY));
 
-    svg.selectAll('rect')
-        .data(pointData)
+    //var rects save the same selection of data so we can access it many times
+   var rects = svg.selectAll('rect')
+        .data(pointData, function(d){ return d.countryCode});
+
+        //separate call function from the draw function, need to save into a variable!
+
+    rects.exit()
+        .remove();
+
+    //update data that hasn't exit() and removed
+    rects
+        .transition()
+        .duration(1000)
+        .attr('x',function(d){
+            return scaleX(d.countryCode);
+        })
+        .attr('y',function(d){
+            return scaleY(d.totalPop);
+        })
+        .attr('width',function(d){
+            return scaleX.bandwidth();
+        })
+        .attr('height',function(d){
+            return 400 - scaleY(d.totalPop);  //400 is the beginning domain value of the y axis, set above
+        });
+
+    //re-draw, with the enter function (updates new data that was entered)
+    rects
+        .enter()
+        .append('rect')
+        .attr('class','bars')
+        .attr('fill', "slategray")
         .attr('x',function(d){
             return scaleX(d.countryCode);
         })
