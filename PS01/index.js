@@ -5,57 +5,66 @@ var marginLeft = 100;
 var marginTop = 100;
 
 var nestedData = [];
+var formerDancers;
+var currentDancers;
+var testMap = d3.map();
+var circle_axis;
 
 var svg = d3.select('svg')
     .append('g')
     .attr('transform', 'translate(' + marginLeft + ',' + marginTop + ')');
 
-//these are the size that the axes will be on the screen; set the domain values after the data loads.
-var scaleX = d3.scaleBand().rangeRound([0, 600]).padding(0.1);
-var scaleY = d3.scaleLinear().range([400, 0]);
+var axislabel = [{value: 1, text: "None"},
+    {value: 2, text: "Diploma from Dance School"},
+    {value: 3, text: "Diploma from Performing Arts School"},
+    {value: 4, text: "Bachelor's Degree"},
+    {value: 5, text: " Advanced Diploma from Dance School"},
+    {value: 6, text: "Advanced Diploma from Performing Arts School"},
+    {value: 7, text: "Graduate Degree"},
+    {value: 8, text: "Other"},
+    {value: "D", text: "Did not answer"}
+];
+
+var circle_array= [1,2,3,4,5,6,7,8];
+
+var LABEL= axislabel.forEach(function (d) {
+    testMap.set(d.value, d.text);
+});
+
 
 
 //import the data from the .csv file
-d3.csv('./countryData_topten.csv', function(dataIn){
+d3.csv('./data.csv', function(dataIn){
 
     nestedData = d3.nest()
-        .key(function(d){return d.year})
+        .key(function (d) {
+            return d.A1CURFOR
+        })
         .entries(dataIn);
+    //console.log(nestedData);
 
-    var loadData = nestedData.filter(function(d){return d.key == '1987'})[0].values;
-
-    // Add the x Axis
-    svg.append("g")
-        .attr('class','xaxis')
-        .attr('transform','translate(0,400)')  //move the x axis from the top of the y axis to the bottom
-        .call(d3.axisBottom(scaleX));
-
-    svg.append("g")
-        .attr('class', 'yaxis')
-        .call(d3.axisLeft(scaleY));
-
-/*
-    svg.append('text')
-        .text('Weekly income by age and gender')
-        .attr('transform','translate(300, -20)')
-        .style('text-anchor','middle');
-
-    svg.append('text')
-        .text('age group')
-        .attr('transform','translate(260, 440)');
-
-    svg.append('text')
-        .text('weekly income')
-        .attr('transform', 'translate(-50,250)rotate(270)');
-
-        */
-
+    currentDancers = nestedData.filter(function(d){return d.key == '1'})[0].values;
+    formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
+    console.log(currentDancers);
+    console.log(formerDancers);
     //bind the data to the d3 selection, but don't draw it yet
     //svg.selectAll('rect')
     //    .data(loadData, function(d){return d;});
 
+    circle_axis= svg.append('circle')
+        .data(axislabel)
+        .attr("cx", 300)           // position the x-centre
+        .attr("cy", 300)           // position the y-centre
+        .attr("r", function(d){
+            console.log(d.value);
+            return 10*d.value
+        })
+        .attr("stroke", "black")    // set the line colour
+        .attr("fill", "none");    // set the fill colour
+
+
     //call the drawPoints function below, and hand it the data2016 variable with the 2016 object array in it
-    drawPoints(loadData);
+    drawPoints(currentDancers);
 
 });
 
@@ -63,42 +72,38 @@ d3.csv('./countryData_topten.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
-    scaleX.domain(pointData.map(function(d){return d.countryCode;}));
-    scaleY.domain([0, d3.max(pointData.map(function(d){return +d.totalPop}))]);
 
-    d3.selectAll('.xaxis')
-        .call(d3.axisBottom(scaleX));
+    console.log(testMap);
+   console.log(testMap.get(5));
 
-    d3.selectAll('.yaxis')
-        .call(d3.axisLeft(scaleY));
+
+   var theta=90;
+
 
     //select all bars in the DOM, and bind them to the new data
-    var rects = svg.selectAll('.bars')
-        .data(pointData, function(d){return d.countryCode;});
+    var lines = svg.selectAll('.bars')
+        .data(pointData, function(d){return d.A6QUALS1;});
 
     //look to see if there are any old bars that don't have keys in the new data list, and remove them.
-    rects.exit()
+    lines.exit()
         .remove();
 
     //update the properties of the remaining bars (as before)
-    rects
+    lines
         .transition()
         .duration(200)
-        .attr('x',function(d){
-            return scaleX(d.countryCode);
+        .attr('x1',300)
+        .attr('x2',400)
+        .attr('y1', function(d){
+            return Math.cos(theta)*d.A6QUALS1
         })
-        .attr('y',function(d){
-            return scaleY(d.totalPop);
+        .attr('y2', function(d){
+            return  Math.sin(theta)*d.A6QUALS1
         })
-        .attr('width',function(d){
-            return scaleX.bandwidth();
-        })
-        .attr('height',function(d){
-            return 400 - scaleY(d.totalPop);  //400 is the beginning domain value of the y axis, set above
-        });
+        .attr('stroke','#424949');
 
-    //add the enter() function to make bars for any new countries in the list, and set their properties
-    rects
+    /*//add the enter() function to make bars for any new countries in the list, and set their properties
+    lines
         .enter()
         .append('rect')
         .attr('class','bars')
@@ -116,24 +121,11 @@ function drawPoints(pointData){
             return 400 - scaleY(d.totalPop);  //400 is the beginning domain value of the y axis, set above
         });
 
+ */
     //take out bars for any old countries that no longer exist
     //rects.exit()
     //    .remove();
 
-
-
 }
 
 
-function updateData(selectedYear){
-    return nestedData.filter(function(d){return d.key == selectedYear})[0].values;
-}
-
-
-//this function runs when the HTML slider is moved
-function sliderMoved(value){
-
-    newData = updateData(value);
-    drawPoints(newData);
-
-}
