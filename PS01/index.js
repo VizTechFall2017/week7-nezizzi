@@ -48,8 +48,9 @@ d3.csv('./data.csv', function(dataIn){
     formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
     //bind the data to the d3 selection, but don't draw it yet
     svg.selectAll('line')
-       .data(currentDancers, function(d){return d.A6QUALS1;});
-
+       .data(currentDancers, function(d){return d.A6QUALS1;})
+        .enter()
+        .append('line');
 
     //circle axes
     circles=svg.selectAll('circle')
@@ -77,7 +78,11 @@ d3.csv('./data.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
-   var theta=100*Math.random()* (Math.PI / 180);
+    //random number between 0 and 360
+    var random=Math.floor(Math.random()*360);
+    var theta=random*(Math.PI/180);
+
+    console.log( Math.cos(random*(Math.PI/180)));
 
     //select all bars in the DOM, and bind them to the new data
    var lines = svg.selectAll('line')
@@ -98,10 +103,11 @@ function drawPoints(pointData){
         .attr('y1',300)
         .attr('x2', function(d){
             console.log(d.A6QUALS1);
-            return d.A6QUALS1//*Math.cos(theta)
+            console.log(d.A6QUALS1*Math.cos(theta));
+            return d.A6QUALS1*Math.cos(theta)
         })
         .attr('y2', function(d){
-            return d.A6QUALS1//*Math.cos(theta)
+            return d.A6QUALS1*Math.sin(theta)
         })
         .attr('stroke','red');
 
@@ -112,10 +118,10 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            return d.A6QUALS1
+            return d.A6QUALS1*Math.cos(theta)
         })
         .attr('y2', function(d){
-            return  d.A6QUALS1
+            return  d.A6QUALS1*Math.sin(theta)
         })
         .attr('stroke','red');
 }
