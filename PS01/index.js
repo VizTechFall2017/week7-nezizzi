@@ -1,18 +1,33 @@
-var width = d3.select('svg').attr('width');
-var height = d3.select('svg').attr('height');
+var width = document.getElementById('svg1').clientWidth;
+var height = document.getElementById('svg1').clientHeight;
+console.log(width);
+console.log(height);
 
 var marginLeft = 100;
 var marginTop = 100;
+
 var nestedData = [];
 var formerDancers;
 var currentDancers;
 var testMap = d3.map();
 var circles;
 var circle_axis;
+var circles2;
+var circle_axis2;
+var center_x=20;
+var center_y=20;
+var R=10;
+var center_x2=20;
+var center_y2=20;
 
-var svg = d3.select('svg')
+var svg = d3.select('#svg1')
     .append('g')
     .attr('transform', 'translate(' + marginLeft + ',' + marginTop + ')');
+
+var svg2 = d3.select('#svg2')
+    .append('g')
+    .attr('transform', 'translate(' + marginLeft + ',' + marginTop + ')');
+
 
 var axislabel = [{value: 1, text: "None"},
     {value: 2, text: "Diploma from Dance School"},
@@ -63,11 +78,49 @@ d3.csv('./data.csv', function(dataIn){
         .append('circle');
 
     circle_axis= circles
-        .attr("cx", 300)
-        .attr("cy", 300)
+        .attr("cx", center_x)
+        .attr("cy", center_y)
         .attr("r", function(d){
             //console.log(d.value);
-            return 25*d.value
+            return R*d.value
+        })
+        .attr("stroke", "black")
+        .attr('stoke-width', '10')
+        .attr("fill", "none")
+        .attr('data-toggle', 'tooltip')
+        .attr('title', function(d){
+            return  d.text;
+        })
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(10)
+                .style("opacity", .9);
+            div.html(d.text)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(1000)
+                .style("opacity", 0);
+        });
+
+    svg2.selectAll('line')
+        .data(currentDancers, function(d){return d.A6QUALS1;})
+        .enter()
+        .append('line');
+
+    circles2=svg.selectAll('circle')
+        .data(axislabel)
+        .enter()
+        .append('circle');
+
+    circle_axis2= circles2
+        .attr("cx", center_x2)
+        .attr("cy", center_y2)
+        .attr("r", function(d){
+            //console.log(d.value);
+            return R*d.value
         })
         .attr("stroke", "black")
         .attr('stoke-width', '10')
@@ -98,23 +151,15 @@ d3.csv('./data.csv', function(dataIn){
 
 });
 
-//this function draws the actual data points as circles. It's split from the enter() command because we want to run it many times
-//without adding more circles each time.
+
+
 function drawPoints(pointData){
 
-    //random number between 0 and 360
-    var random=Math.floor(Math.random()*360);
-    var theta=random*(Math.PI/180);
-
-    console.log(Math.floor(Math.random()*360)*(Math.PI/180));
-
-    //select all bars in the DOM, and bind them to the new data
    var lines = svg.selectAll('line')
        .data(pointData, function(d){
            //console.log(d.A6QUALS1);
            return d.A6QUALS1;
        });
-
 
     //look to see if there are any old bars that don't have keys in the new data list, and remove them.
     lines.exit()
@@ -126,12 +171,10 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            //console.log(300-25*d.A6QUALS1*Math.cos(theta));
-            return 300-25*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x-R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            //console.log(300-25*d.A6QUALS1*Math.sin(theta));
-            return  300-25*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return  center_y-R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
 
@@ -142,10 +185,10 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            return 300-25*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x-R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return 300-25*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_y-R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
 }
