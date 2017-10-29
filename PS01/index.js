@@ -3,21 +3,23 @@ var height = document.getElementById('svg1').clientHeight;
 console.log(width);
 console.log(height);
 
-var marginLeft = 100;
-var marginTop = 100;
+var marginLeft = 50;
+var marginTop = 50;
 
 var nestedData = [];
 var formerDancers;
 var currentDancers;
 var testMap = d3.map();
+
+//circle variables
 var circles;
 var circle_axis;
 var circles2;
 var circle_axis2;
-var center_x=20;
-var center_y=20;
+var center_x=50;
+var center_y=25;
 var R=10;
-var center_x2=20;
+var center_x2=420;
 var center_y2=20;
 
 var svg = d3.select('#svg1')
@@ -40,7 +42,6 @@ var axislabel = [{value: 1, text: "None"},
     {value: "D", text: "Did not answer"}
 ];
 
-var circle_array= [1,2,3,4,5,6,7,8];
 
 var LABEL= axislabel.forEach(function (d) {
     testMap.set(d.value, d.text);
@@ -168,13 +169,13 @@ function drawPoints(pointData){
     //update the properties of the remaining bars (as before)
     lines
         .append('line')
-        .attr('x1',300)
-        .attr('y1',300)
+        .attr('x1',center_x)
+        .attr('y1',center_y)
         .attr('x2', function(d){
-            return center_x-R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return  center_y-R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return  center_y - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
 
@@ -182,15 +183,54 @@ function drawPoints(pointData){
     lines
         .enter()
         .append('line')
-        .attr('x1',300)
-        .attr('y1',300)
+        .attr('x1',center_x)
+        .attr('y1',center_y)
         .attr('x2', function(d){
-            return center_x-R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return center_y-R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_y - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
+
+    var lines2 = svg2.selectAll('line')
+        .data(pointData, function(d){
+            //console.log(d.A6QUALS1);
+            return d.A6QUALS1;
+        });
+
+    //look to see if there are any old bars that don't have keys in the new data list, and remove them.
+    lines2.exit()
+        .remove();
+
+    //update the properties of the remaining bars (as before)
+    lines2
+        .append('line')
+        .attr('x1',center_x2)
+        .attr('y1',center_y2)
+        .attr('x2', function(d){
+            return center_x2 - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+        })
+        .attr('y2', function(d){
+            return  center_y2 - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+        })
+        .attr('stroke','red');
+
+    //add the enter() function to make bars for any new countries in the list, and set their properties
+    lines2
+        .enter()
+        .append('line')
+        .attr('x1',center_x2)
+        .attr('y1',center_y2)
+        .attr('x2', function(d){
+            return center_x2 - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+        })
+        .attr('y2', function(d){
+            return center_y2 - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+        })
+        .attr('stroke','red');
+
+
 }
 
 
