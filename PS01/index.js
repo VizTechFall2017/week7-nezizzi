@@ -3,7 +3,6 @@ var height = d3.select('svg').attr('height');
 
 var marginLeft = 100;
 var marginTop = 100;
-
 var nestedData = [];
 var formerDancers;
 var currentDancers;
@@ -32,6 +31,8 @@ var LABEL= axislabel.forEach(function (d) {
     testMap.set(d.value, d.text);
 });
 
+//console.log(testMap);
+//console.log(testMap.get(5));
 
 
 //import the data from the .csv file
@@ -42,27 +43,25 @@ d3.csv('./data.csv', function(dataIn){
             return d.A1CURFOR
         })
         .entries(dataIn);
-    //console.log(nestedData);
 
     currentDancers = nestedData.filter(function(d){return d.key == '1'})[0].values;
     formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
-    console.log(currentDancers);
-    console.log(formerDancers);
     //bind the data to the d3 selection, but don't draw it yet
-    //svg.selectAll('rect')
-    //    .data(loadData, function(d){return d;});
+    svg.selectAll('line')
+       .data(currentDancers, function(d){return d.A6QUALS1;});
 
+
+    //circle axes
     circles=svg.selectAll('circle')
         .data(axislabel)
         .enter()
         .append('circle');
 
-
     circle_axis= circles
         .attr("cx", 300)           // position the x-centre
         .attr("cy", 300)           // position the y-centre
         .attr("r", function(d){
-            console.log(d.value);
+            //console.log(d.value);
             return 25*d.value
         })
         .attr("stroke", "black")    // set the line colour
@@ -78,60 +77,45 @@ d3.csv('./data.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
-
-    console.log(testMap);
-   console.log(testMap.get(5));
-
-
-   var theta=90;
-
+   var theta=Math.PI;
 
     //select all bars in the DOM, and bind them to the new data
-   var lines = svg.selectAll('.bars')
-       .data(pointData, function(d){return d.A6QUALS1;});
+   var lines = svg.selectAll('line')
+       .data(pointData, function(d){
+           //console.log(d.A6QUALS1);
+           return d.A6QUALS1;
+       });
 
 
     //look to see if there are any old bars that don't have keys in the new data list, and remove them.
     lines.exit()
         .remove();
 
-
     //update the properties of the remaining bars (as before)
     lines
         .attr('x1',300)
-        .attr('x2',400)
-        .attr('y1', function(d){
+        .attr('y1',300)
+        .attr('x2', function(d){
+            console.log(d.A6QUALS1)
+            return d.A6QUALS1*Math.cos(theta)
+        })
+        .attr('y2', function(d){
+            return d.A6QUALS1*Math.cos(theta)
+        })
+        .attr('stroke','#424949');
+
+    //add the enter() function to make bars for any new countries in the list, and set their properties
+    lines
+        .enter()
+        .attr('x1',300)
+        .attr('y1',300)
+        .attr('x2', function(d){
             return Math.cos(theta)*d.A6QUALS1
         })
         .attr('y2', function(d){
             return  Math.sin(theta)*d.A6QUALS1
         })
         .attr('stroke','#424949');
-
-    /*//add the enter() function to make bars for any new countries in the list, and set their properties
-    lines
-        .enter()
-        .append('rect')
-        .attr('class','bars')
-        .attr('fill', "slategray")
-        .attr('x',function(d){
-            return scaleX(d.countryCode);
-        })
-        .attr('y',function(d){
-            return scaleY(d.totalPop);
-        })
-        .attr('width',function(d){
-            return scaleX.bandwidth();
-        })
-        .attr('height',function(d){
-            return 400 - scaleY(d.totalPop);  //400 is the beginning domain value of the y axis, set above
-        });
-
- */
-    //take out bars for any old countries that no longer exist
-    //rects.exit()
-    //    .remove();
-
 }
 
 
