@@ -10,6 +10,7 @@ var nestedData = [];
 var formerDancers;
 var currentDancers;
 var testMap = d3.map();
+clicked=false;
 
 //circle variables
 var circles;
@@ -19,7 +20,7 @@ var circle_axis2;
 var center_x=50;
 var center_y=30;
 var R=10;
-var center_x2=300;
+var center_x2=150;
 var center_y2=30;
 
 var svg = d3.select('#svg1')
@@ -107,7 +108,7 @@ d3.csv('./data.csv', function(dataIn){
         });
 
     svg2.selectAll('line')
-        .data(currentDancers, function(d){return d.A6QUALS1;})
+        .data(currentDancers, function(d){return d.A7GENED;})
         .enter()
         .append('line');
 
@@ -195,8 +196,7 @@ function drawPoints(pointData){
 
     var lines2 = svg2.selectAll('line')
         .data(pointData, function(d){
-            //console.log(d.A6QUALS1);
-            return d.A6QUALS1;
+            return d.A7GENED;
         });
 
     //look to see if there are any old bars that don't have keys in the new data list, and remove them.
@@ -209,12 +209,12 @@ function drawPoints(pointData){
         .attr('x1',center_x2)
         .attr('y1',center_y2)
         .attr('x2', function(d){
-            return center_x2 - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x2 - R*d.A7GENED*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return  center_y2 - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return  center_y2 - R*d.A7GENED*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
-        .attr('stroke','red');
+        .attr('stroke','purple');
 
     //add the enter() function to make bars for any new countries in the list, and set their properties
     lines2
@@ -223,14 +223,24 @@ function drawPoints(pointData){
         .attr('x1',center_x2)
         .attr('y1',center_y2)
         .attr('x2', function(d){
-            return center_x2 - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x2 - R*d.A7GENED*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return center_y2 - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_y2 - R*d.A7GENED*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
-        .attr('stroke','red');
+        .attr('stroke','purple');
 
 
 }
 
+function buttonClicked(){
 
+    if(clicked == true){
+        drawPoints(formerDancers);
+        clicked = false;
+    }
+    else{
+        drawPoints(currentDancers);
+        clicked = true;
+    }
+}
