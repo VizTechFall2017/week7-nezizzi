@@ -31,6 +31,10 @@ var LABEL= axislabel.forEach(function (d) {
     testMap.set(d.value, d.text);
 });
 
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 //console.log(testMap);
 //console.log(testMap.get(5));
 
@@ -59,14 +63,29 @@ d3.csv('./data.csv', function(dataIn){
         .append('circle');
 
     circle_axis= circles
-        .attr("cx", 300)           // position the x-centre
-        .attr("cy", 300)           // position the y-centre
+        .attr("cx", 300)
+        .attr("cy", 300)
         .attr("r", function(d){
             //console.log(d.value);
             return 25*d.value
         })
-        .attr("stroke", "black")    // set the line colour
-        .attr("fill", "none");    // set the fill colour
+        .attr("stroke", "black")
+        .attr('stoke-width', '10')
+        .attr("fill", "none")
+        .attr('data-toggle', 'tooltip')
+        .attr('title', function(d){
+            return  d.text;
+        })
+        .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(d.text)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        });
+
+
 
 
     //call the drawPoints function below, and hand it the data2016 variable with the 2016 object array in it
@@ -78,6 +97,11 @@ d3.csv('./data.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
+    //random number between 0 and 360
+    var random=Math.floor(Math.random()*360);
+    var theta=random*(Math.PI/180);
+
+    console.log(Math.floor(Math.random()*360)*(Math.PI/180));
 
     //select all bars in the DOM, and bind them to the new data
    var lines = svg.selectAll('line')
