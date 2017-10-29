@@ -1,7 +1,5 @@
 var width = document.getElementById('svg1').clientWidth;
 var height = document.getElementById('svg1').clientHeight;
-console.log(width);
-console.log(height);
 
 var marginLeft = 50;
 var marginTop = 50;
@@ -79,10 +77,17 @@ d3.csv('./data.csv', function(dataIn){
             return d.A1CURFOR
         })
         .entries(dataIn);
-
     currentDancers = nestedData.filter(function(d){return d.key == '1'})[0].values;
     formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
-    //bind the data to the d3 selection, but don't draw it yet
+
+   svg.append('text')
+       .text('Highest Level Dance Education')
+       .attr('transform','translate(0, -35)');
+   svg2.append('text')
+       .text('Highest Level Non-Dance Education')
+       .attr('transform','translate(10, -35)');
+
+
     svg.selectAll('line')
         .data(currentDancers, function(d){return d.A6QUALS1;})
         .enter()
