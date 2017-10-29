@@ -48,6 +48,21 @@ var LABEL= axislabel.forEach(function (d) {
     testMap.set(d.value, d.text);
 });
 
+
+var axislabel2 = [{value: 1, text: "Completed Primary School"},
+    {value: 2, text: "Completed Secondary School"},
+    {value: 3, text: "Post-Secondary Diploma, certificate"},
+    {value: 4, text: "Bachelor's Degree"},
+    {value: 5, text: "Graduate Degree"},
+    {value: 6, text: "Other"},
+    {value: "D", text: "Did not answer"}
+];
+
+
+var LABEL2= axislabel2.forEach(function (d) {
+    testMap.set(d.value, d.text);
+});
+
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -113,7 +128,7 @@ d3.csv('./data.csv', function(dataIn){
         .append('line');
 
     circles2=svg2.selectAll('circle')
-        .data(axislabel)
+        .data(axislabel2)
         .enter()
         .append('circle');
 
