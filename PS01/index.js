@@ -8,6 +8,7 @@ var nestedData = [];
 var formerDancers;
 var currentDancers;
 var testMap = d3.map();
+var circles;
 var circle_axis;
 
 var svg = d3.select('svg')
@@ -51,13 +52,18 @@ d3.csv('./data.csv', function(dataIn){
     //svg.selectAll('rect')
     //    .data(loadData, function(d){return d;});
 
-    circle_axis= svg.append('circle')
+    circles=svg.selectAll('circle')
         .data(axislabel)
+        .enter()
+        .append('circle');
+
+
+    circle_axis= circles
         .attr("cx", 300)           // position the x-centre
         .attr("cy", 300)           // position the y-centre
         .attr("r", function(d){
             console.log(d.value);
-            return 10*d.value
+            return 25*d.value
         })
         .attr("stroke", "black")    // set the line colour
         .attr("fill", "none");    // set the fill colour
@@ -81,17 +87,17 @@ function drawPoints(pointData){
 
 
     //select all bars in the DOM, and bind them to the new data
-    var lines = svg.selectAll('.bars')
-        .data(pointData, function(d){return d.A6QUALS1;});
+   var lines = svg.selectAll('.bars')
+       .data(pointData, function(d){return d.A6QUALS1;});
+
 
     //look to see if there are any old bars that don't have keys in the new data list, and remove them.
     lines.exit()
         .remove();
 
+
     //update the properties of the remaining bars (as before)
     lines
-        .transition()
-        .duration(200)
         .attr('x1',300)
         .attr('x2',400)
         .attr('y1', function(d){
