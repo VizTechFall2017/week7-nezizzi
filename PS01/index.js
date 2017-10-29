@@ -78,11 +78,16 @@ d3.csv('./data.csv', function(dataIn){
         })
         .on("mouseover", function(d) {
             div.transition()
-                .duration(200)
+                .duration(10)
                 .style("opacity", .9);
             div.html(d.text)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            div.transition()
+                .duration(1000)
+                .style("opacity", 0);
         });
 
 
