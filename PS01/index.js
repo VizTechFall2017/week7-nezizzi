@@ -77,7 +77,7 @@ d3.csv('./data.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
-   var theta=Math.PI;
+   var theta=100*Math.random()* (Math.PI / 180);
 
     //select all bars in the DOM, and bind them to the new data
    var lines = svg.selectAll('line')
@@ -93,29 +93,31 @@ function drawPoints(pointData){
 
     //update the properties of the remaining bars (as before)
     lines
+        .append('line')
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            console.log(d.A6QUALS1)
-            return d.A6QUALS1*Math.cos(theta)
+            console.log(d.A6QUALS1);
+            return d.A6QUALS1//*Math.cos(theta)
         })
         .attr('y2', function(d){
-            return d.A6QUALS1*Math.cos(theta)
+            return d.A6QUALS1//*Math.cos(theta)
         })
-        .attr('stroke','#424949');
+        .attr('stroke','red');
 
     //add the enter() function to make bars for any new countries in the list, and set their properties
     lines
         .enter()
+        .append('line')
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            return Math.cos(theta)*d.A6QUALS1
+            return d.A6QUALS1
         })
         .attr('y2', function(d){
-            return  Math.sin(theta)*d.A6QUALS1
+            return  d.A6QUALS1
         })
-        .attr('stroke','#424949');
+        .attr('stroke','red');
 }
 
 
