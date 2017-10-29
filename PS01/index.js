@@ -78,11 +78,6 @@ d3.csv('./data.csv', function(dataIn){
 //without adding more circles each time.
 function drawPoints(pointData){
 
-    //random number between 0 and 360
-    var random=Math.floor(Math.random()*360);
-    var theta=random*(Math.PI/180);
-
-    console.log( Math.cos(random*(Math.PI/180)));
 
     //select all bars in the DOM, and bind them to the new data
    var lines = svg.selectAll('line')
@@ -102,12 +97,12 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            console.log(300-25*d.A6QUALS1*Math.cos(theta));
-            return 300-25*d.A6QUALS1*Math.cos(theta)
+            //console.log(300-25*d.A6QUALS1*Math.cos(theta));
+            return 300-25*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            console.log(300-25*d.A6QUALS1*Math.sin(theta));
-            return  300-25*d.A6QUALS1*Math.sin(theta)
+            //console.log(300-25*d.A6QUALS1*Math.sin(theta));
+            return  300-25*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
 
@@ -118,10 +113,10 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            return 300-25*d.A6QUALS1*Math.cos(theta)
+            return 300-25*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('y2', function(d){
-            return 300-25*d.A6QUALS1*Math.sin(theta)
+            return 300-25*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
         })
         .attr('stroke','red');
 }
