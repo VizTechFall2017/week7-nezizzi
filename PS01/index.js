@@ -15,11 +15,11 @@ var circles;
 var circle_axis;
 var circles2;
 var circle_axis2;
-var center_x=50;
-var center_y=30;
-var R=10;
+var center_x=150;
+var center_y=175;
+var R=20;
 var center_x2=150;
-var center_y2=30;
+var center_y2=175;
 
 var svg = d3.select('#svg1')
     .append('g')
@@ -83,10 +83,10 @@ d3.csv('./data.csv', function(dataIn){
 
    svg.append('text')
        .text('Highest Level Dance Education')
-       .attr('transform','translate(0, -35)');
+       .attr('transform','translate(20, 0)');
    svg2.append('text')
        .text('Highest Level Non-Dance Education')
-       .attr('transform','translate(10, -35)');
+       .attr('transform','translate(10, 0)');
 
 
     svg.selectAll('line')
@@ -192,10 +192,10 @@ function drawPoints(pointData){
         .attr('x1',center_x)
         .attr('y1',center_y)
         .attr('x2', function(d){
-            return center_x - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x - R*d.A6QUALS1*(Math.cos(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('y2', function(d){
-            return  center_y - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return  center_y - R*d.A6QUALS1*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('stroke','red');
 
@@ -206,10 +206,10 @@ function drawPoints(pointData){
         .attr('x1',center_x)
         .attr('y1',center_y)
         .attr('x2', function(d){
-            return center_x - R*d.A6QUALS1*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x - R*d.A6QUALS1*(Math.cos(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('y2', function(d){
-            return center_y - R*d.A6QUALS1*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_y - R*d.A6QUALS1*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('stroke','red');
 
@@ -228,10 +228,10 @@ function drawPoints(pointData){
         .attr('x1',center_x2)
         .attr('y1',center_y2)
         .attr('x2', function(d){
-            return center_x2 - R*d.A7GENED*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x2 - R*d.A7GENED*(Math.cos(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('y2', function(d){
-            return  center_y2 - R*d.A7GENED*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return  center_y2 - R*d.A7GENED*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('stroke','purple');
 
@@ -242,10 +242,10 @@ function drawPoints(pointData){
         .attr('x1',center_x2)
         .attr('y1',center_y2)
         .attr('x2', function(d){
-            return center_x2 - R*d.A7GENED*Math.cos(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_x2 - R*d.A7GENED*(Math.cos(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('y2', function(d){
-            return center_y2 - R*d.A7GENED*Math.sin(Math.floor(Math.random()*360)*(Math.PI/180))
+            return center_y2 - R*d.A7GENED*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
         .attr('stroke','purple');
 
@@ -255,11 +255,12 @@ function drawPoints(pointData){
 function buttonClicked(){
 
     if(clicked == true){
-        drawPoints(formerDancers);
+        drawPoints(currentDancers);
         clicked = false;
+
     }
     else{
-        drawPoints(currentDancers);
+        drawPoints(formerDancers);
         clicked = true;
     }
 }
