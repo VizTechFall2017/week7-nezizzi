@@ -17,10 +17,10 @@ var circle_axis;
 var circles2;
 var circle_axis2;
 var center_x=50;
-var center_y=25;
+var center_y=30;
 var R=10;
-var center_x2=420;
-var center_y2=20;
+var center_x2=300;
+var center_y2=30;
 
 var svg = d3.select('#svg1')
     .append('g')
@@ -111,7 +111,7 @@ d3.csv('./data.csv', function(dataIn){
         .enter()
         .append('line');
 
-    circles2=svg.selectAll('circle')
+    circles2=svg2.selectAll('circle')
         .data(axislabel)
         .enter()
         .append('circle');
