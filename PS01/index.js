@@ -48,7 +48,7 @@ d3.csv('./data.csv', function(dataIn){
     formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
     //bind the data to the d3 selection, but don't draw it yet
     svg.selectAll('line')
-       .data(currentDancers, function(d){return d.A6QUALS1;})
+        .data(currentDancers, function(d){return d.A6QUALS1;})
         .enter()
         .append('line');
 
@@ -102,12 +102,12 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            console.log(d.A6QUALS1);
-            console.log(d.A6QUALS1*Math.cos(theta));
-            return d.A6QUALS1*Math.cos(theta)
+            console.log(300-25*d.A6QUALS1*Math.cos(theta));
+            return 300-25*d.A6QUALS1*Math.cos(theta)
         })
         .attr('y2', function(d){
-            return d.A6QUALS1*Math.sin(theta)
+            console.log(300-25*d.A6QUALS1*Math.sin(theta));
+            return  300-25*d.A6QUALS1*Math.sin(theta)
         })
         .attr('stroke','red');
 
@@ -118,10 +118,10 @@ function drawPoints(pointData){
         .attr('x1',300)
         .attr('y1',300)
         .attr('x2', function(d){
-            return d.A6QUALS1*Math.cos(theta)
+            return 300-25*d.A6QUALS1*Math.cos(theta)
         })
         .attr('y2', function(d){
-            return  d.A6QUALS1*Math.sin(theta)
+            return 300-25*d.A6QUALS1*Math.sin(theta)
         })
         .attr('stroke','red');
 }
