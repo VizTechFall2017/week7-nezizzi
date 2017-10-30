@@ -80,7 +80,6 @@ d3.csv('./data.csv', function(dataIn){
     currentDancers = nestedData.filter(function(d){return d.key == '1'})[0].values;
     formerDancers = nestedData.filter(function(d){return d.key == '2'})[0].values;
 
-
    svg.append('text')
        .text('Highest Level Dance Education')
        .attr('transform','translate(20, 0)');
