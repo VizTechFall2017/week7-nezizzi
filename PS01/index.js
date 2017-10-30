@@ -210,7 +210,20 @@ function drawPoints(pointData){
         .attr('y2', function(d){
             return center_y - R*d.A6QUALS1*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
         })
-        .attr('stroke','red');
+        .attr('id', function(d){
+            return +d.CASEID
+        })
+        .attr('stroke','red')
+        .on('mouseover', function(d){
+            d3.select(this).attr('stroke-width', '10').attr('stroke','purple');
+            var currentId =  d3.select(this).attr('id');
+            svg2.selectAll('#' + currentId).attr('stroke-width', '10').attr('stroke', 'red');
+        })
+        .on('mouseout', function(d){
+            d3.select(this).attr('stroke','red').attr('stroke-width', '1');
+            var currentId =  d3.select(this).attr('id');
+            svg2.selectAll('#' + currentId).attr('stroke', 'purple').attr('stroke-width', '10');
+        });
 
     var lines2 = svg2.selectAll('line')
         .data(pointData, function(d){
@@ -245,6 +258,9 @@ function drawPoints(pointData){
         })
         .attr('y2', function(d){
             return center_y2 - R*d.A7GENED*(Math.sin(Math.floor(Math.random()*360)*(Math.PI/180)))
+        })
+        .attr('id', function(d){
+            return +d.CASEID
         })
         .attr('stroke','purple');
 
